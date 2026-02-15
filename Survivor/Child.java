@@ -1,3 +1,4 @@
+
 public class Child extends Survivor{
 
     //this is to fix the srarting health for child
