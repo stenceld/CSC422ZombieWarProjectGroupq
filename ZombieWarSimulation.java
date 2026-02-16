@@ -2,40 +2,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// ZombieWarSimulation.java
-// Release 1.0
-// - Randomly generates survivors and zombies
-// - Runs battle until one side is dead
-// - Prints only the summary report
+/// ZombieWarSimulation.java
+/// Release 1
 
 public class ZombieWarSimulation {
 
-    // Stores all survivors and zombies
+    /// Stores survivors
     private List<Survivor> survivors = new ArrayList<>();
+
+    /// Stores zombies
     private List<Zombie> zombies = new ArrayList<>();
 
+    /// Shared random object
     private Random rand = new Random();
 
-    // Generates n survivors randomly (Child, Teacher, Soldier).
+
+    /// Generates random survivors
     public void generateSurvivors(int n) {
 
         survivors.clear();
 
         for (int i = 0; i < n; i++) {
 
-            int choice = rand.nextInt(3); // 0, 1, 2
+            int choice = rand.nextInt(3); // 0,1,2
 
             if (choice == 0) {
                 survivors.add(new Child());
-            } else if (choice == 1) {
+            }
+            else if (choice == 1) {
                 survivors.add(new Teacher());
-            } else {
+            }
+            else {
                 survivors.add(new Soldier());
             }
         }
     }
 
-    // Generates n zombies randomly (CommonInfected, Tank).
+
+    /// Generates random zombies
     public void generateZombies(int n) {
 
         zombies.clear();
@@ -46,21 +50,20 @@ public class ZombieWarSimulation {
 
             if (choice == 0) {
                 zombies.add(new CommonInfected());
-            } else {
+            }
+            else {
                 zombies.add(new Tank());
             }
         }
     }
 
-    // Battle loop for Release 1.
-    // Survivors attack zombies.
-    // Zombies attack survivors.
-    // Repeat until one side is wiped out.
+
+    /// Runs battle until one side is eliminated
     public void runBattle() {
 
         while (countAliveSurvivors() > 0 && countAliveZombies() > 0) {
 
-            // Survivors attack zombies
+            /// Survivors attack zombies
             for (Survivor s : survivors) {
                 if (!s.isAlive()) continue;
 
@@ -70,7 +73,7 @@ public class ZombieWarSimulation {
                 }
             }
 
-            // Zombies attack survivors
+            /// Zombies attack survivors
             for (Zombie z : zombies) {
                 if (!z.isAlive()) continue;
 
@@ -82,7 +85,8 @@ public class ZombieWarSimulation {
         }
     }
 
-    // Prints Release 1 summary output.
+
+    /// Prints Release 1 summary
     public void printReport() {
 
         int totalSurvivors = survivors.size();
@@ -99,41 +103,42 @@ public class ZombieWarSimulation {
                 " have made it to safety.");
     }
 
-    // Counts living survivors
+
+    /// Counts living survivors
     private int countAliveSurvivors() {
+
         int count = 0;
 
         for (Survivor s : survivors) {
-            if (s.isAlive()) {
-                count++;
-            }
+            if (s.isAlive()) count++;
         }
 
         return count;
     }
 
-    // Counts living zombies
+
+    /// Counts living zombies
     private int countAliveZombies() {
+
         int count = 0;
 
         for (Zombie z : zombies) {
-            if (z.isAlive()) {
-                count++;
-            }
+            if (z.isAlive()) count++;
         }
 
         return count;
     }
 
-    // Main method for Release 1 (random counts each run).
+
+    /// Main method
     public static void main(String[] args) {
 
         ZombieWarSimulation sim = new ZombieWarSimulation();
 
-        // Random survivor count: 1 to 20
+        /// Random survivor count between 1 and 20
         int survivorCount = sim.rand.nextInt(20) + 1;
 
-        // Random zombie count: 1 to 15
+        /// Random zombie count between 1 and 15
         int zombieCount = sim.rand.nextInt(15) + 1;
 
         sim.generateSurvivors(survivorCount);
