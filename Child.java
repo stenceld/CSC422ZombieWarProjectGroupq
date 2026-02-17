@@ -1,7 +1,7 @@
-// child survivor
+// Weak survivor with low health and attack
 public class Child extends Survivor {
 
-    public Child() {
-        super(20, 2);
+    public Child(int id) {
+        super(20, 2, "Child", id);
     }
 }
