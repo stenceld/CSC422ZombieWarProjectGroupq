@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// Release 2 simulation
+// Release 3 simulation
 public class ZombieWarSimulation {
 
     private final List<Survivor> survivors = new ArrayList<>();
@@ -43,12 +43,27 @@ public class ZombieWarSimulation {
         }
     }
 
+    // Random weapon cache, then assign each survivor a random weapon from it
+    public void assignWeapons() {
+
+        List<WeaponType> cache = new ArrayList<>();
+
+        for (int i = 0; i < survivors.size(); i++) {
+            cache.add(WeaponType.randomWeapon(rand));
+        }
+
+        for (int i = 0; i < survivors.size(); i++) {
+            WeaponType picked = cache.get(rand.nextInt(cache.size()));
+            survivors.get(i).setWeapon(picked);
+        }
+    }
+
     // Runs battle until one side is completely eliminated
     public void runBattle() {
 
         while (countAliveSurvivors() > 0 && countAliveZombies() > 0) {
 
-            // Survivors attack first
+            // Survivors attack first (uses weapons)
             for (Survivor s : survivors) {
                 if (!s.isAlive()) continue;
 
@@ -56,17 +71,21 @@ public class ZombieWarSimulation {
                     if (!z.isAlive()) continue;
 
                     boolean wasAlive = z.isAlive();
-                    s.attack(z);
+                    WeaponType w = s.getWeapon();
 
-                    // Print kill message if zombie died
+                    if (w != null && w.hits(rand)) {
+                        z.takeDamage(w.getDamage());
+                    }
+
                     if (wasAlive && !z.isAlive()) {
                         System.out.println(s.getTypeName() + " " + s.getId()
-                                + " killed " + z.getTypeName() + " " + z.getId());
+                                + " killed " + z.getTypeName() + " " + z.getId()
+                                + " using " + w.getName());
                     }
                 }
             }
 
-            // Zombies attack next
+            // Zombies attack next (same as Release 2)
             for (Zombie z : zombies) {
                 if (!z.isAlive()) continue;
 
@@ -76,7 +95,6 @@ public class ZombieWarSimulation {
                     boolean wasAlive = s.isAlive();
                     z.attack(s);
 
-                    // Print kill message if survivor died
                     if (wasAlive && !s.isAlive()) {
                         System.out.println(z.getTypeName() + " " + z.getId()
                                 + " killed " + s.getTypeName() + " " + s.getId());
@@ -145,12 +163,13 @@ public class ZombieWarSimulation {
 
         ZombieWarSimulation sim = new ZombieWarSimulation();
 
-        // Use sample numbers from assignment
         int survivorCount = 5;
         int zombieCount = 9;
 
         sim.generateSurvivors(survivorCount);
         sim.generateZombies(zombieCount);
+
+        sim.assignWeapons();
 
         sim.runBattle();
         sim.printReport();
